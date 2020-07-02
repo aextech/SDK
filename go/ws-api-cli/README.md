@@ -1,7 +1,8 @@
-package main
-
-
 #### websocketApi SDK
+
+> 用户连接websocketApi的SDK,使用此SDK部署到生产环境需要做好`充分`的测试.  
+> 本例仅供参考,部分逻辑需要根据自己的业务去实现  
+> 例子:`handle/test.go`
 
 #### 启动
 > go run main.go -h api.aex.zone -p /v3 -s wss
@@ -14,7 +15,7 @@ package main
 ws-api-cli
     ├── func                公共的函数
     ├── handle              业务逻辑
-    │   └── test.go     
+    │   └── test.go         例子
     ├── lib                 核心库文件
     │   ├── client.go
     │   ├── conn.go
