@@ -6,9 +6,10 @@ import (
 	"net/url"
 	"time"
 	"ws-api-cli/handle"
+	"ws-api-cli/types"
 )
 
-type Hup struct {
+type Hub struct {
 	Url      url.URL
 	req      chan []byte
 	resp     chan []byte
@@ -21,7 +22,7 @@ func Client(host, path, scheme string) {
 
 	u := url.URL{Scheme: scheme, Host: host, Path: path}
 
-	hup := &Hup{
+	Hub := &Hub{
 		Url:      u,
 		req:      make(chan []byte, 100),
 		resp:     make(chan []byte, 100),
@@ -30,17 +31,17 @@ func Client(host, path, scheme string) {
 		reCount:  -1,
 	}
 
-	go hup.Create(&handle.Body{
+	go Hub.Create(&handle.Body{
 		Receive: make(chan []byte, 100),
 		Send:    make(chan []byte, 100),
 	})
 
-	re := time.NewTicker(300 * time.Millisecond)
+	re := time.NewTicker(types.ReConnLimit)
 
 	for {
-		ok := hup.connect()
+		ok := Hub.connect()
 
-		hup.reCount++
+		Hub.reCount++
 
 		if !ok {
 			log.Println("尝试重连...")
@@ -48,15 +49,15 @@ func Client(host, path, scheme string) {
 			continue
 		}
 
-		go hup.read()
+		go Hub.read()
 
-		go hup.write()
+		go Hub.write()
 
-		<-hup.reStatus
+		<-Hub.reStatus
 	}
 }
 
-func (h *Hup) Create(handle Handle) {
+func (h *Hub) Create(handle Handle) {
 	b := handle.GetBody()
 
 	go b.Work()

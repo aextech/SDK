@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func (h *Hup) write() {
+func (h *Hub) write() {
 	ping := time.NewTicker(wsPingPeriod)
 	defer func() {
 		_ = h.conn.Close()

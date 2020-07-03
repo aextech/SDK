@@ -24,7 +24,7 @@ var (
 	space   = []byte{' '}
 )
 
-func (h *Hup) connect() bool {
+func (h *Hub) connect() bool {
 
 	//开启压缩
 	websocket.DefaultDialer.EnableCompression = true

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (h *Hup) read() {
+func (h *Hub) read() {
 	defer func() {
 		_ = h.conn.Close()
 		h.reStatus <- true
