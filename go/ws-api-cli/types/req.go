@@ -1,9 +1,5 @@
 package types
 
-import (
-	"net/url"
-)
-
 //认证
 type Auth struct {
 	*Cmd
@@ -13,4 +9,9 @@ type Auth struct {
 	Md5    string `json:"md5"`
 }
 
-var U url.URL
+//最新公共成交数据
+type PublicTrade struct {
+	*Cmd
+	Action string `json:"action"`
+	Symbol string `json:"symbol"`
+}

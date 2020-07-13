@@ -3,8 +3,9 @@ package types
 import "time"
 
 const (
-	CmdConnSucc = 0  //连接成功
-	CmdAuth     = 99 //签名认证
+	CmdConnSucc    = 0  //连接成功
+	CmdAuth        = 99 //签名认证
+	CmdPublicTrade = 1  //最新公共成交数据
 )
 
 //重连频率

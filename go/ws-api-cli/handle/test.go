@@ -51,6 +51,8 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 		//连接成功的操作
 		//-------------
+
+		//认证
 		b.Auth()
 
 		break
@@ -65,12 +67,44 @@ func (b *Body) option(resp types.RespCmd) {
 		//认证成功的操作
 		//-------------
 
+		//订阅最新成交数据
+		b.PublicTrade("btc_cnc")
+
 		break
+	case types.CmdPublicTrade:
+		if codeStatus(resp.Code) == false {
+			//订阅最新成交数据失败
+			log.Println("public-trade fail [code]:" + strconv.Itoa(resp.Code))
+			break
+		}
 
 		//case ...
 	default:
 		log.Println("不存在的命令字")
 	}
+}
+
+//认证
+func (b *Body) Auth() {
+	auth := types.Auth{
+		Cmd:    &types.Cmd{Cmd: types.CmdAuth},
+		Action: "login",
+	}
+
+	var time string
+	auth.Md5, auth.Key, time = _func.Sign()
+	auth.Time = assist.StringToInt64(time)
+
+	b.send(auth)
+}
+
+//请求参数symbol都支持多个订阅，用逗号隔开连接
+func (b *Body) PublicTrade(symbol string) {
+	b.send(types.PublicTrade{
+		Cmd:    &types.Cmd{Cmd: types.CmdPublicTrade},
+		Action: "sub",
+		Symbol: symbol,
+	})
 }
 
 //return bool
@@ -93,18 +127,4 @@ func (b *Body) send(v interface{}) {
 
 	log.Println("Send: " + string(msg))
 	b.Send <- msg
-}
-
-//认证
-func (b *Body) Auth() {
-	auth := types.Auth{
-		Cmd:    &types.Cmd{Cmd: types.CmdAuth},
-		Action: "login",
-	}
-
-	var time string
-	auth.Md5, auth.Key, time = _func.Sign()
-	auth.Time = assist.StringToInt64(time)
-
-	b.send(auth)
 }
