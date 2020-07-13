@@ -5,10 +5,13 @@
 > 例子:`handle/test.go`
 
 #### 启动
-> go run main.go -h api.aex.zone -p /v3 -s wss
-- `-h` 主机名
-- `-p` 路径
-- `-s` wss or ws
+> go run main.go -H api.aex.zone -p /v3 -s wss -key xxxx -skey xxxx -id xxx  
+- `-h` 主机名(默认:api.aex.zone)  
+- `-p` 路径(默认:/v3)  
+- `-s` wss or ws (默认:wss)  
+- `-key` 公钥
+- `-skey` 秘钥
+- `-id` 用户id
 
 > 目录结构
 ```

@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"flag"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/url"
@@ -18,12 +19,23 @@ type Hub struct {
 	reCount  int
 }
 
-func Client(host, path, scheme string) {
+var host = flag.String("H", "api.aex.zone", "input host")
 
-	u := url.URL{Scheme: scheme, Host: host, Path: path}
+var scheme = flag.String("s", "wss", "input scheme")
+
+var path = flag.String("p", "/v3", "input path")
+
+var key = flag.String("key", "", "input Key")
+
+var skey = flag.String("skey", "", "input Skey")
+
+var id = flag.String("id", "", "input userId")
+
+func Client() {
+	Parse()
 
 	Hub := &Hub{
-		Url:      u,
+		Url:      types.U,
 		req:      make(chan []byte, 100),
 		resp:     make(chan []byte, 100),
 		conn:     &websocket.Conn{},
@@ -71,4 +83,26 @@ func (h *Hub) Create(handle Handle) {
 			b.Receive <- msg
 		}
 	}
+}
+
+func Parse() {
+	flag.Parse()
+
+	if *host == "" {
+		log.Fatal("host is not allowed to be empty")
+	}
+
+	if *scheme == "" {
+		log.Fatal("scheme is not allowed to be empty")
+	}
+
+	if *path == "" {
+		log.Fatal("path is not allowed to be empty")
+	}
+
+	types.U = url.URL{Scheme: *scheme, Host: *host, Path: *path}
+
+	types.Key = *key
+	types.Skey = *skey
+	types.Id = *id
 }

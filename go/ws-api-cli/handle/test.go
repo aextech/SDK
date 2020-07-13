@@ -2,7 +2,10 @@ package handle
 
 import (
 	"encoding/json"
+	"github.com/wangxudong123/assist"
 	"log"
+	"strconv"
+	_func "ws-api-cli/func"
 	"ws-api-cli/types"
 )
 
@@ -30,11 +33,12 @@ func (b *Body) Work() {
 	resp := types.RespCmd{}
 	for {
 		select {
-		case msg := <-b.Receive:
+		case msg := <-b.Receive: //接收消息
 			log.Println("Receive: " + string(msg))
 
 			_ = json.Unmarshal(msg, &resp)
 
+			//处理消息
 			b.option(resp)
 		}
 	}
@@ -47,14 +51,16 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 		//连接成功的操作
 		//-------------
+		b.Auth()
 
 		break
 	case types.CmdAuth: //登录认证
-		if resp.Code != 0 {
+		if codeStatus(resp.Code) == false {
 			//认证失败
-
+			log.Println("auth fail [code]:" + strconv.Itoa(resp.Code))
 			break
 		}
+
 		//-------------
 		//认证成功的操作
 		//-------------
@@ -67,9 +73,38 @@ func (b *Body) option(resp types.RespCmd) {
 	}
 }
 
+//return bool
+//true is ok
+//false is fail
+func codeStatus(code int) bool {
+	s := strconv.Itoa(code)
+	if string(s[0]) == "0" {
+		return false
+	}
+
+	if assist.StringToInt(string(s[0]))%2 == 0 {
+		return true
+	}
+	return false
+}
+
 func (b *Body) send(v interface{}) {
 	msg, _ := json.Marshal(&v)
 
 	log.Println("Send: " + string(msg))
 	b.Send <- msg
+}
+
+//认证
+func (b *Body) Auth() {
+	auth := types.Auth{
+		Cmd:    &types.Cmd{Cmd: types.CmdAuth},
+		Action: "login",
+	}
+
+	var time string
+	auth.Md5, auth.Key, time = _func.Sign()
+	auth.Time = assist.StringToInt64(time)
+
+	b.send(auth)
 }

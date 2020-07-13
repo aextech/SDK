@@ -34,6 +34,9 @@ func (h *Hub) connect() bool {
 	websocket.DefaultDialer.WriteBufferSize = 1024
 
 	c, _, err := websocket.DefaultDialer.Dial(h.Url.String(), nil)
+
+	log.Println(h.Url.String())
+
 	if err != nil {
 		log.Println("连接失败:" + err.Error())
 		return false
