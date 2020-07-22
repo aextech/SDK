@@ -23,7 +23,7 @@ var host = flag.String("H", "api.aex.zone", "input host")
 
 var scheme = flag.String("s", "wss", "input scheme")
 
-var path = flag.String("p", "/v3", "input path")
+var path = flag.String("p", "/wsv3", "input path")
 
 var key = flag.String("key", "", "input Key")
 
