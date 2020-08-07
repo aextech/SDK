@@ -20,7 +20,6 @@ func (h *Hub) write() {
 			if !ok {
 				_ = h.conn.WriteMessage(websocket.CloseMessage, []byte{})
 			}
-			_ = h.conn.SetWriteDeadline(time.Now().Add(wsWriteWait))
 			w, _ := h.conn.NextWriter(websocket.TextMessage)
 			_, _ = w.Write(msg)
 

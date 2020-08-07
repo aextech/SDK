@@ -9,9 +9,13 @@ type Auth struct {
 	Md5    string `json:"md5"`
 }
 
-//最新公共成交数据
-type PublicTrade struct {
+type Types struct {
 	*Cmd
 	Action string `json:"action"`
 	Symbol string `json:"symbol"`
 }
+
+//最新公共成交数据
+//type PublicTrade struct {
+//	*Types
+//}

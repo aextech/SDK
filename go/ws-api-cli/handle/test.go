@@ -53,8 +53,9 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 
 		//认证
-		b.Auth()
-
+		//b.Auth()
+		b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
+		b.PublicOrder("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
 		break
 	case types.CmdAuth: //登录认证
 		if codeStatus(resp.Code) == false {
@@ -68,7 +69,7 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 
 		//订阅最新成交数据
-		b.PublicTrade("btc_cnc")
+		//b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
 
 		break
 	case types.CmdPublicTrade:
@@ -80,7 +81,8 @@ func (b *Body) option(resp types.RespCmd) {
 
 		//case ...
 	default:
-		log.Println("不存在的命令字")
+		//log.Println("不存在的命令字")
+		break
 	}
 }
 
@@ -100,8 +102,17 @@ func (b *Body) Auth() {
 
 //请求参数symbol都支持多个订阅，用逗号隔开连接
 func (b *Body) PublicTrade(symbol string) {
-	b.send(types.PublicTrade{
+	b.send(types.Types{
 		Cmd:    &types.Cmd{Cmd: types.CmdPublicTrade},
+		Action: "sub",
+		Symbol: symbol,
+	})
+}
+
+//请求参数symbol都支持多个订阅，用逗号隔开连接
+func (b *Body) PublicOrder(symbol string) {
+	b.send(types.Types{
+		Cmd:    &types.Cmd{Cmd: types.CmdPublicOrder},
 		Action: "sub",
 		Symbol: symbol,
 	})
@@ -124,7 +135,6 @@ func codeStatus(code int) bool {
 
 func (b *Body) send(v interface{}) {
 	msg, _ := json.Marshal(&v)
-
 	log.Println("Send: " + string(msg))
 	b.Send <- msg
 }

@@ -16,7 +16,7 @@ const (
 	wsPingPeriod = (wsPongWait * 9) / 10
 
 	//允许的最大消息。
-	wsMaxMessageSize = 512
+	wsMaxMessageSize = 4096
 )
 
 var (
