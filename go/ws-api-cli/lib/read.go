@@ -13,18 +13,20 @@ func (h *Hub) read() {
 	}()
 	h.conn.SetReadLimit(wsMaxMessageSize)
 	_ = h.conn.SetWriteDeadline(time.Now().Add(wsPongWait))
-	h.conn.SetPongHandler(func(string) error {
-		_ = h.conn.SetReadDeadline(time.Now().Add(wsPongWait))
-		return nil
-	})
+	_ = h.conn.SetReadDeadline(time.Now().Add(wsPongWait))
 	for {
 		_, msg, err := h.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
 			}
 			log.Println("读取ws失败#3" + err.Error())
 			break
 		}
-		h.resp <- msg
+		_ = h.conn.SetReadDeadline(time.Now().Add(wsPongWait))
+		_ = h.conn.SetWriteDeadline(time.Now().Add(wsPongWait))
+		if string(msg) != "pong" {
+			h.resp <- msg
+		}
 	}
 }

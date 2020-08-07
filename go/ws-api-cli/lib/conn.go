@@ -13,7 +13,7 @@ const (
 	// 允许读取下一个消息的时间。
 	wsPongWait = 60 * time.Second
 
-	wsPingPeriod = (wsPongWait * 9) / 10
+	wsPingPeriod = 10 * time.Second
 
 	//允许的最大消息。
 	wsMaxMessageSize = 4096

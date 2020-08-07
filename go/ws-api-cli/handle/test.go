@@ -34,7 +34,7 @@ func (b *Body) Work() {
 	for {
 		select {
 		case msg := <-b.Receive: //接收消息
-			log.Println("Receive: " + string(msg))
+			//log.Println("Receive: " + string(msg))
 
 			_ = json.Unmarshal(msg, &resp)
 
@@ -51,7 +51,6 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 		//连接成功的操作
 		//-------------
-
 		//认证
 		//b.Auth()
 		b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
@@ -135,6 +134,6 @@ func codeStatus(code int) bool {
 
 func (b *Body) send(v interface{}) {
 	msg, _ := json.Marshal(&v)
-	log.Println("Send: " + string(msg))
+	//log.Println("Send: " + string(msg))
 	b.Send <- msg
 }
