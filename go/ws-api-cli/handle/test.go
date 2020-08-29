@@ -53,8 +53,8 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 		//认证
 		//b.Auth()
-		b.PublicTrade("btc_cnc")
-		b.PublicOrder("btc_cnc")
+		//b.PublicTrade("btc_cnc")
+		b.PublicOrder("gat_cnc")
 		//b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
 		//b.PublicOrder("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
 		break
