@@ -54,9 +54,10 @@ func (b *Body) option(resp types.RespCmd) {
 		//认证
 		//b.Auth()
 		//b.PublicTrade("btc_cnc")
-		b.PublicOrder("gat_cnc")
-		//b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
-		//b.PublicOrder("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
+		b.PublicTrade("btc_cnc")
+		b.PublicOrder("btc_cnc")
+		b.PublicKline("btc_cnc@1min")
+		b.PublicMarket("all")
 		break
 	case types.CmdAuth: //登录认证
 		if codeStatus(resp.Code) == false {
@@ -70,7 +71,6 @@ func (b *Body) option(resp types.RespCmd) {
 		//-------------
 
 		//订阅最新成交数据
-		//b.PublicTrade("btc_cnc,btc_usdt,gat_cnc,etc_usdt,eth_usdt")
 
 		break
 	case types.CmdPublicTrade:
@@ -114,6 +114,24 @@ func (b *Body) PublicTrade(symbol string) {
 func (b *Body) PublicOrder(symbol string) {
 	b.send(types.Types{
 		Cmd:    &types.Cmd{Cmd: types.CmdPublicOrder},
+		Action: "sub",
+		Symbol: symbol,
+	})
+}
+
+//请求参数symbol都支持多个订阅，用逗号隔开连接
+func (b *Body) PublicKline(symbol string) {
+	b.send(types.Types{
+		Cmd:    &types.Cmd{Cmd: types.CmdPublicKline},
+		Action: "sub",
+		Symbol: symbol,
+	})
+}
+
+//请求参数symbol都支持多个订阅，用逗号隔开连接
+func (b *Body) PublicMarket(symbol string) {
+	b.send(types.Types{
+		Cmd:    &types.Cmd{Cmd: types.CmdPublicMarket},
 		Action: "sub",
 		Symbol: symbol,
 	})
