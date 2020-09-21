@@ -57,7 +57,6 @@ func (b *Body) option(resp types.RespCmd) {
 		b.PublicTrade("btc_cnc")
 		b.PublicOrder("btc_cnc")
 		b.PublicKline("btc_cnc@1min")
-		b.PublicMarket("all")
 		break
 	case types.CmdAuth: //登录认证
 		if codeStatus(resp.Code) == false {
